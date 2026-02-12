@@ -23,34 +23,38 @@
     </div>
 
     <script>
-        // --- BẠN CHỈ CẦN SỬA 1 DÒNG NÀY ---
-        const USER = 'tienminh3027'; // Thay ten-github-cua-ban bằng tên thật của bạn nhé!
-        // ---------------------------------
+    // Cấu hình cứng để tránh nhầm lẫn
+    const USER = 'tienminh3027'; 
+    const REPO = 'profile'; 
 
-        const REPO = 'profile';
-        async function loadIssues() {
-            const content = document.getElementById('blog-content');
-            try {
-                const res = await fetch(`https://api.github.com/repos/${USER}/${REPO}/issues?state=open`);
-                if (!res.ok) throw new Error();
-                const data = await res.json();
-                
-                if (data.length === 0) {
-                    content.innerHTML = '<p style="text-align:center; opacity:0.7;">Chưa có bài đăng nào. Hãy tạo 1 "Issue" trên GitHub để nó hiện ở đây nhé!</p>';
-                } else {
-                    content.innerHTML = data.map(issue => `
-                        <div class="post">
-                            <h3 style="margin-bottom:5px;">${issue.title}</h3>
-                            <div style="font-size:0.8rem; opacity:0.5; margin-bottom:15px;">📅 ${new Date(issue.created_at).toLocaleDateString('vi-VN')}</div>
-                            <div class="post-body">${issue.body ? issue.body.replace(/\n/g, '<br>') : ''}</div>
-                        </div>
-                    `).join('');
-                }
-            } catch (err) {
-                content.innerHTML = '<p style="text-align:center; color:#ff4d4d;">❌ Lỗi: Không tìm thấy Repo hoặc sai tên User.</p>';
+    async function loadIssues() {
+        const content = document.getElementById('blog-content');
+        try {
+            // Thêm mốc thời gian để trình duyệt không lấy dữ liệu cũ (cache)
+            const res = await fetch(`https://api.github.com/repos/${USER}/${REPO}/issues?state=open&_=${new Date().getTime()}`);
+            
+            if (!res.ok) throw new Error('Không tìm thấy dữ liệu');
+
+            const data = await res.json();
+            
+            if (data.length === 0) {
+                content.innerHTML = '<p style="text-align:center; opacity:0.7;">Đã kết nối! Hãy tạo 1 Issue để đăng bài nhé.</p>';
+            } else {
+                // Hiển thị danh sách bài viết
+                content.innerHTML = data.map(issue => `
+                    <div class="post" style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                        <h3 style="color: #60efff; margin: 0 0 10px 0;">${issue.title}</h3>
+                        <div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 15px;">📅 Ngày đăng: ${new Date(issue.created_at).toLocaleDateString('vi-VN')}</div>
+                        <div class="post-body" style="line-height: 1.6;">${issue.body ? issue.body.replace(/\n/g, '<br>') : 'Không có nội dung.'}</div>
+                    </div>
+                `).join('');
             }
+        } catch (err) {
+            content.innerHTML = '<p style="text-align:center; color:#ff4d4d;">❌ Lỗi kết nối vệ tinh. Thử F5 lại nhé!</p>';
         }
-        loadIssues();
-    </script>
-</body>
+    }
+
+    // Chạy hàm lấy bài
+    loadIssues();
+</script>
 </html>
