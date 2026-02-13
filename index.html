@@ -1,32 +1,61 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiến Minh | Galaxy Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nguyễn Tiến Minh</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Pacifico&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Montserrat', sans-serif; overflow: hidden; background: #02010a; color: white; }
-        
+        /* Ngăn chặn cuộn ngang hoàn toàn */
+        html, body { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Quan trọng để không bị văng trên mobile */
+            background: #02010a; 
+            color: white; 
+        }
+
         .galaxy-wrapper { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: radial-gradient(circle at 50% 50%, #1b0b2e 0%, #02010a 100%);
             z-index: 1; 
         }
 
+        .content { 
+            position: relative; z-index: 10; height: 100vh; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            padding: 20px; /* Thêm padding để không chạm mép màn hình */
+            text-align: center;
+        }
+
         .profile-name { 
-            font-family: 'Pacifico', cursive; font-size: clamp(3.5rem, 12vw, 5.5rem); 
+            font-family: 'Pacifico', cursive; 
+            /* Giảm kích thước tối thiểu xuống một chút cho các máy nhỏ như iPhone SE */
+            font-size: clamp(2.5rem, 10vw, 5.5rem);  
             background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-size: 400%; animation: rgbMove 5s linear infinite;
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.4));
-            margin-bottom: 25px; position: relative; z-index: 10;
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
+            margin-bottom: 25px;
         }
         @keyframes rgbMove { from { background-position: 0%; } to { background-position: 400%; } }
 
-        /* Fix Sao Băng bay chậm và mượt (Animation 5 giây thay vì 3 giây) */
+        .btn-entry {
+            background: rgba(255, 255, 255, 0.1); border: 2px solid white; color: white;
+            padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 900;
+            transition: 0.4s; backdrop-filter: blur(10px); margin-bottom: 30px;
+            font-size: 0.9rem; /* Chỉnh size chữ nút bấm vừa phải cho mobile */
+            white-space: nowrap;
+        }
+
+        .social-icons { display: flex; gap: 15px; }
+        .social-icon { width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.3); }
+        .social-icon img { width: 24px; filter: invert(1); }
+
+        /* Sao băng */
         .meteor {
             position: absolute; width: 2px; height: 80px; 
             background: linear-gradient(to bottom, rgba(255,255,255,1), transparent);
@@ -36,26 +65,8 @@
             0% { transform: translate(0, 0) rotate(45deg); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
-            100% { transform: translate(-800px, 800px) rotate(45deg); opacity: 0; }
+            100% { transform: translate(-600px, 600px) rotate(45deg); opacity: 0; }
         }
-
-        .content { 
-            position: relative; z-index: 10; height: 100vh; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-        }
-        
-        .btn-entry {
-            background: rgba(255, 255, 255, 0.1); border: 2px solid white; color: white;
-            padding: 14px 40px; border-radius: 50px; text-decoration: none; font-weight: 900;
-            transition: 0.4s; backdrop-filter: blur(10px); margin-bottom: 30px;
-        }
-        .btn-entry:hover { background: white; color: black; transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255,255,255,0.4); }
-
-        .social-icons { display: flex; gap: 20px; }
-        .social-icon { width: 55px; height: 55px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.3); transition: 0.4s; }
-        .social-icon:hover { background: #fff; }
-        .social-icon img { width: 28px; filter: invert(1); }
-        .social-icon:hover img { filter: invert(0); }
 
         .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--t) infinite; }
         @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
@@ -80,8 +91,7 @@
         const stars = document.getElementById('starField');
         const meteors = document.getElementById('meteorField');
         
-        // Tạo 200 sao nền
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < 150; i++) { // Giảm bớt số sao trên mobile cho nhẹ máy
             const s = document.createElement('div');
             s.className = 'star';
             const size = Math.random() * 2 + 1 + 'px';
@@ -92,18 +102,15 @@
             stars.appendChild(s);
         }
 
-        // Tạo sao băng liên tục mỗi 0.8 giây (nhiều hơn)
         setInterval(() => {
             const m = document.createElement('div');
             m.className = 'meteor';
-            m.style.left = (Math.random() * 120 + 30) + '%'; // Xuất phát từ nhiều góc
+            m.style.left = (Math.random() * 100 + 20) + '%'; 
             m.style.top = '-100px';
-            // Tốc độ bay ngẫu nhiên từ 4s đến 7s để nhìn cho tự nhiên
             m.style.animationDuration = (Math.random() * 3 + 4) + 's';
             meteors.appendChild(m);
             setTimeout(() => m.remove(), 7000);
-        }, 800);
+        }, 1200); // Giãn cách thời gian sao băng cho đỡ rối
     </script>
 </body>
 </html>
-
