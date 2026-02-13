@@ -150,56 +150,80 @@
     <audio id="audio"></audio>
 
     <script>
-        // Tạo sao lấp lánh
-        const field = document.getElementById('starField');
-        for (let i = 0; i < 100; i++) {
-            const s = document.createElement('div');
-            s.className = 'star';
-            const size = Math.random() * 3 + 'px';
-            s.style.width = s.style.height = size;
-            s.style.left = Math.random() * 100 + '%';
-            s.style.top = Math.random() * 100 + '%';
-            s.style.setProperty('--t', Math.random() * 3 + 2 + 's');
-            field.appendChild(s);
-        }
+// Tạo sao lấp lánh (Giữ nguyên)
+const field = document.getElementById('starField');
+for (let i = 0; i < 100; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 3 + 'px';
+    s.style.width = s.style.height = size;
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.setProperty('--t', Math.random() * 3 + 2 + 's');
+    field.appendChild(s);
+}
 
-        // Nhạc nhẽo
-        const playlist = [
-            { title: "Cứ Chill Thôi", artist: "Chillies", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-            { title: "Waiting For You", artist: "MONO", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" }
-        ];
+// Cấu hình Nhạc nền (Chỉ 1 bài duy nhất)
+const mySong = { 
+    title: "Tên Bài Hát Của Bạn", 
+    artist: "Tên Ca Sĩ", 
+    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" // Thay link nhạc của bạn vào đây
+};
 
-        let currentTrack = 0;
-        const audio = document.getElementById('audio');
-        const playBtn = document.getElementById('playBtn');
+const audio = document.getElementById('audio');
+const playBtn = document.getElementById('playBtn');
+const songTitle = document.getElementById('songTitle');
+const songArtist = document.getElementById('songArtist');
 
-        function loadTrack(i) {
-            audio.src = playlist[i].src;
-            document.getElementById('songTitle').innerText = playlist[i].title;
-            document.getElementById('songArtist').innerText = playlist[i].artist;
-        }
+// Tải nhạc
+function loadMusic() {
+    audio.src = mySong.src;
+    songTitle.innerText = mySong.title;
+    songArtist.innerText = mySong.artist;
+}
 
-        function togglePlay() {
-            if (audio.paused) { audio.play(); playBtn.innerText = '⏸️'; }
-            else { audio.pause(); playBtn.innerText = '▶️'; }
-        }
+// Bật/Tắt nhạc
+function togglePlay() {
+    if (audio.paused) {
+        audio.play().catch(() => alert("Bạn cần tương tác với trang để bật nhạc!"));
+        playBtn.innerText = '⏸️';
+    } else {
+        audio.pause();
+        playBtn.innerText = '▶️';
+    }
+}
 
-        function nextTrack() { currentTrack = (currentTrack + 1) % playlist.length; loadTrack(currentTrack); audio.play(); playBtn.innerText = '⏸️'; }
-        function prevTrack() { currentTrack = (currentTrack - 1 + playlist.length) % playlist.length; loadTrack(currentTrack); audio.play(); playBtn.innerText = '⏸️'; }
+// Các nút chuyển bài (Vì chỉ có 1 bài nên ta cho nó Reset lại từ đầu)
+function nextTrack() { audio.currentTime = 0; audio.play(); }
+function prevTrack() { audio.currentTime = 0; audio.play(); }
 
-        audio.ontimeupdate = () => {
-            const pct = (audio.currentTime / audio.duration) * 100;
-            document.getElementById('progressFill').style.width = pct + '%';
-        };
+// Cập nhật thanh tiến trình
+audio.ontimeupdate = () => {
+    if (audio.duration) {
+        const pct = (audio.currentTime / audio.duration) * 100;
+        document.getElementById('progressFill').style.width = pct + '%';
+    }
+};
 
-        document.getElementById('progressBar').onclick = (e) => {
-            const width = document.getElementById('progressBar').clientWidth;
-            audio.currentTime = (e.offsetX / width) * audio.duration;
-        };
+// Click vào thanh tiến trình để nhảy đoạn
+document.getElementById('progressBar').onclick = (e) => {
+    const width = document.getElementById('progressBar').clientWidth;
+    audio.currentTime = (e.offsetX / width) * audio.duration;
+};
 
-        loadTrack(0);
+// Tự động phát khi vừa vào trang (Lưu ý: Trình duyệt thường chặn cái này, 
+// người dùng phải click vào màn hình 1 lần thì nhạc mới bắt đầu chạy)
+window.addEventListener('click', () => {
+    if (audio.paused && audio.currentTime === 0) {
+        audio.play();
+        playBtn.innerText = '⏸️';
+    }
+}, { once: true }); // Chỉ chạy 1 lần duy nhất khi click lần đầu
+
+loadMusic();
     </script>
 </body>
 </html>
+
 
 
