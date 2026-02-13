@@ -3,77 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nguyễn Tiến Minh</title>
+    <title>Tiến Minh | Coder Space</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Pacifico&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Montserrat', sans-serif; overflow: hidden; background: #02010a; color: white; }
         
-        /* Nền Thiên Hà & Nebula */
         .galaxy-wrapper { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: radial-gradient(circle at 50% 50%, #1b0b2e 0%, #02010a 100%);
             z-index: 1; 
         }
 
-        /* Chữ RGB Neon Đổi Màu */
+        /* Tên RGB */
         .profile-name { 
-            font-family: 'Pacifico', cursive; font-size: clamp(3.5rem, 12vw, 5.5rem); 
+            font-family: 'Pacifico', cursive; font-size: clamp(3rem, 10vw, 5rem); 
             background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-size: 400%; animation: rgbMove 5s linear infinite;
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.4));
-            margin-bottom: 25px; position: relative; z-index: 10;
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
+            margin-bottom: 20px; position: relative; z-index: 10;
         }
         @keyframes rgbMove { from { background-position: 0%; } to { background-position: 400%; } }
 
-        /* Fix Animation Phi Hành Gia - Bay lơ lửng cực mượt */
-        .astro { 
-            position: absolute; width: 160px; top: 15%; left: 12%; z-index: 5; 
-            animation: astroFloat 10s ease-in-out infinite;
-            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.2));
-        }
-        @keyframes astroFloat { 
-            0% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(30px, -40px) rotate(10deg); }
-            66% { transform: translate(-20px, 20px) rotate(-10deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
+        /* Bàn phím Rainbow đổi màu liên tục */
+        .keyboard {
+            position: absolute; width: 180px; top: 15%; left: 8%; z-index: 5;
+            animation: float 6s ease-in-out infinite, rainbow 3s linear infinite;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.5));
         }
 
-        /* Fix Sao Băng (Meteor) */
+        /* Coder Nam bên phải */
+        .coder {
+            position: absolute; width: 180px; top: 15%; right: 8%; z-index: 5;
+            animation: float 7s ease-in-out infinite;
+        }
+
+        /* Vật phẩm trang trí */
+        .item { position: absolute; opacity: 0.7; z-index: 4; animation: float 8s ease-in-out infinite; }
+        .mouse { width: 60px; bottom: 20%; left: 15%; }
+        .headphone { width: 80px; bottom: 15%; right: 15%; }
+        .laptop { width: 100px; top: 50%; left: 5%; opacity: 0.5; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
+        }
+
+        @keyframes rainbow {
+            0% { filter: hue-rotate(0deg) drop-shadow(0 0 15px cyan); }
+            100% { filter: hue-rotate(360deg) drop-shadow(0 0 15px magenta); }
+        }
+
+        /* Sao băng */
         .meteor {
-            position: absolute; width: 2px; height: 60px; 
-            background: linear-gradient(to bottom, #fff, transparent);
+            position: absolute; width: 2px; height: 50px; background: linear-gradient(to bottom, #fff, transparent);
             opacity: 0; animation: meteorRain 3s linear infinite;
         }
         @keyframes meteorRain {
             0% { transform: translate(0, 0) rotate(45deg); opacity: 1; }
-            100% { transform: translate(-600px, 600px) rotate(45deg); opacity: 0; }
+            100% { transform: translate(-500px, 500px) rotate(45deg); opacity: 0; }
         }
 
-        .content { 
-            position: relative; z-index: 10; height: 100vh; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-        }
+        .content { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        /* Nút Vào Blog */
         .btn-entry {
             background: rgba(255, 255, 255, 0.1); border: 2px solid white; color: white;
-            padding: 14px 40px; border-radius: 50px; cursor: pointer; backdrop-filter: blur(10px);
-            font-weight: 900; text-decoration: none; font-size: 1.1rem; transition: 0.4s;
-            margin-bottom: 30px; box-shadow: 0 0 20px rgba(255,255,255,0.1);
+            padding: 12px 35px; border-radius: 50px; text-decoration: none; font-weight: 900;
+            transition: 0.4s; backdrop-filter: blur(10px); margin-bottom: 25px;
         }
-        .btn-entry:hover { background: white; color: black; transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255,255,255,0.4); }
+        .btn-entry:hover { background: white; color: black; transform: scale(1.1); }
 
-        /* Social Icons */
-        .social-icons { display: flex; gap: 20px; }
-        .social-icon { 
-            width: 55px; height: 55px; border-radius: 50%; background: rgba(255,255,255,0.1); 
-            display: flex; align-items: center; justify-content: center; 
-            border: 1px solid rgba(255,255,255,0.3); transition: 0.4s; 
-        }
-        .social-icon:hover { transform: scale(1.1); background: #fff; border-color: #00ff87; }
-        .social-icon img { width: 28px; filter: invert(1); transition: 0.3s; }
+        .social-icons { display: flex; gap: 15px; }
+        .social-icon { width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.3); transition: 0.3s; }
+        .social-icon:hover { background: white; transform: rotate(360deg); }
+        .social-icon img { width: 25px; filter: invert(1); }
         .social-icon:hover img { filter: invert(0); }
 
         .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--t) infinite; }
@@ -82,52 +86,47 @@
 </head>
 <body>
     <div class="galaxy-wrapper">
-        <img src="https://pngimg.com/uploads/astronaut/astronaut_PNG48.png" class="astro" alt="Astronaut">
+        <img src="https://cdn-icons-png.flaticon.com/512/810/810452.png" class="keyboard" alt="Keyboard">
+        <img src="https://cdn-icons-png.flaticon.com/512/2018/2018163.png" class="coder" alt="Coder">
+        
+        <img src="https://cdn-icons-png.flaticon.com/512/1055/1055329.png" class="item laptop">
+        <img src="https://cdn-icons-png.flaticon.com/512/3063/3063822.png" class="item mouse">
+        <img src="https://cdn-icons-png.flaticon.com/512/1213/1213233.png" class="item headphone">
+
         <div id="starField"></div>
         <div id="meteorField"></div>
     </div>
     
     <div class="content">
         <h1 class="profile-name">Tiến Minh</h1>
-        
         <a href="blog.html" class="btn-entry">XEM THÀNH TÍCH 🏆</a>
-
         <div class="social-icons">
-            <a href="https://facebook.com/tienminh3027" target="_blank" class="social-icon">
-                <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png">
-            </a>
-            <a href="https://tiktok.com/@tienminh3027" target="_blank" class="social-icon">
-                <img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png">
-            </a>
+            <a href="https://facebook.com/tienminh3027" target="_blank" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png"></a>
+            <a href="https://tiktok.com/@tienminh3027" target="_blank" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png"></a>
         </div>
     </div>
 
     <script>
         const stars = document.getElementById('starField');
         const meteors = document.getElementById('meteorField');
-        
-        // Tạo sao lấp lánh
-        for (let i = 0; i < 150; i++) {
+        for (let i = 0; i < 100; i++) {
             const s = document.createElement('div');
             s.className = 'star';
-            const size = Math.random() * 2 + 1 + 'px';
-            s.style.width = size;
-            s.style.height = size;
+            const size = Math.random() * 3 + 'px';
+            s.style.width = s.style.height = size;
             s.style.left = Math.random() * 100 + '%';
             s.style.top = Math.random() * 100 + '%';
             s.style.setProperty('--t', Math.random() * 3 + 2 + 's');
             stars.appendChild(s);
         }
-
-        // Tạo sao băng rơi mượt hơn
         setInterval(() => {
             const m = document.createElement('div');
             m.className = 'meteor';
-            m.style.left = (Math.random() * 100 + 50) + '%';
+            m.style.left = (Math.random() * 100 + 20) + '%';
             m.style.top = '-50px';
             meteors.appendChild(m);
             setTimeout(() => m.remove(), 3000);
-        }, 1200);
+        }, 1500);
     </script>
 </body>
 </html>
