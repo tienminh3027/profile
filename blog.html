@@ -14,6 +14,7 @@
         
         html, body { 
             width: 100%;
+            max-width: 100vw;
             height: 100%;
             overflow-x: hidden;
             position: relative;
@@ -38,9 +39,9 @@
         
         .container { 
             max-width: 800px; 
-            width: 100%;
+            width: calc(100% - 40px); /* Trừ padding 2 bên */
             margin: 50px auto; 
-            padding: 20px; 
+            padding: 0 20px;
             position: relative; 
             z-index: 1; 
         }
@@ -75,9 +76,8 @@
             transition: 0.3s;
             width: 100%;
             max-width: 100%;
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            overflow: hidden; /* QUAN TRỌNG: Chặn nội dung tràn */
+            overflow: hidden; /* CHẶN CỨNG */
+            position: relative;
         }
         
         .card:hover { 
@@ -103,23 +103,30 @@
             overflow-wrap: break-word;
         }
 
-        /* FIX ẢNH - QUAN TRỌNG NHẤT */
+        /* FIX ẢNH TRIỆT ĐỂ */
+        .card p img,
         .card img,
         .card video,
-        .card iframe {
-            max-width: 100% !important;
-            height: auto !important;
-            width: 100% !important;
-            object-fit: contain;
-            border-radius: 10px;
-            margin: 10px 0;
-            display: block;
-        }
-
-        /* Fix link ảnh nếu có */
+        .card iframe,
         .card a img {
             max-width: 100% !important;
+            width: 100% !important;
             height: auto !important;
+            object-fit: contain !important;
+            border-radius: 10px;
+            margin: 10px 0;
+            display: block !important;
+        }
+
+        /* Override mọi style inline từ GitHub */
+        .card * {
+            max-width: 100% !important;
+        }
+
+        .card a {
+            max-width: 100%;
+            display: inline-block;
+            overflow: hidden;
         }
         
         .date-tag { 
@@ -160,7 +167,8 @@
         @media (max-width: 600px) {
             .container {
                 margin: 30px auto;
-                padding: 15px;
+                width: calc(100% - 30px);
+                padding: 0 15px;
             }
             
             header h1 {
@@ -183,34 +191,52 @@
     </div>
     <script>
         async function load() {
-            const res = await fetch('https://api.github.com/repos/tienminh3027/profile/issues?state=open');
-            const data = await res.json();
-            const div = document.getElementById('list');
-            div.innerHTML = '';
-            data.forEach(i => {
-                let body = i.body || '';
-                let date = new Date(i.created_at).toLocaleDateString('vi-VN');
-                const match = body.match(/Ngày:\s*(\d{1,2}\/\d{1,2}\/\d{4})/i);
-                if (match) { 
-                    date = match[1]; 
-                    body = body.replace(match[0], '').trim(); 
-                }
+            try {
+                const res = await fetch('https://api.github.com/repos/tienminh3027/profile/issues?state=open');
+                const data = await res.json();
+                const div = document.getElementById('list');
+                div.innerHTML = '';
                 
-                const item = document.createElement('div');
-                item.className = 'card';
-                item.innerHTML = `<h3>${i.title}</h3><p>${body}</p><span class="date-tag">📅 ${date}</span>`;
-                div.appendChild(item);
-                
-                // FIX ẢNH SAU KHI RENDER (quan trọng!)
-                const images = item.querySelectorAll('img');
-                images.forEach(img => {
-                    img.style.maxWidth = '100%';
-                    img.style.height = 'auto';
-                    img.style.width = '100%';
-                    img.style.objectFit = 'contain';
+                data.forEach(i => {
+                    let body = i.body || '';
+                    let date = new Date(i.created_at).toLocaleDateString('vi-VN');
+                    const match = body.match(/Ngày:\s*(\d{1,2}\/\d{1,2}\/\d{4})/i);
+                    if (match) { 
+                        date = match[1]; 
+                        body = body.replace(match[0], '').trim(); 
+                    }
+                    
+                    const item = document.createElement('div');
+                    item.className = 'card';
+                    item.innerHTML = `<h3>${i.title}</h3><p>${body}</p><span class="date-tag">📅 ${date}</span>`;
+                    div.appendChild(item);
                 });
-            });
+                
+                // FORCE FIX TẤT CẢ ẢNH SAU KHI RENDER
+                setTimeout(() => {
+                    const allImages = document.querySelectorAll('.card img');
+                    allImages.forEach(img => {
+                        // Xóa mọi style inline
+                        img.removeAttribute('width');
+                        img.removeAttribute('height');
+                        img.style.cssText = 'max-width: 100% !important; width: 100% !important; height: auto !important; display: block !important; object-fit: contain !important;';
+                    });
+                    
+                    // Fix link chứa ảnh
+                    const allLinks = document.querySelectorAll('.card a');
+                    allLinks.forEach(link => {
+                        if (link.querySelector('img')) {
+                            link.style.cssText = 'max-width: 100% !important; display: block !important; overflow: hidden !important;';
+                        }
+                    });
+                }, 500);
+                
+            } catch (error) {
+                console.error('Error loading issues:', error);
+                document.getElementById('list').innerHTML = '<div class="card"><p>Không thể tải dữ liệu. Vui lòng thử lại sau.</p></div>';
+            }
         }
+        
         load();
     </script>
 </body>
